@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Sticker from './Sticker';
+import useImagePreload from './hooks/useImagePreload';
 
 interface StickerData {
   id: string;
@@ -137,6 +138,7 @@ const getRandomPosition = (
 };
 
 const App: React.FC = () => {
+  const { isLoaded: imagesLoaded } = useImagePreload(stickerFiles);
   const [stickers, setStickers] = useState<StickerData[]>([]);
   const [dimensions, setDimensions] = useState({
     width: window.innerWidth,
@@ -169,6 +171,10 @@ const App: React.FC = () => {
   }, [dimensions]);
 
   useEffect(() => {
+    if (!imagesLoaded) {
+      return undefined;
+    }
+
     const initialStickers: StickerData[] = [];
     const positions: { x: number; y: number }[] = [];
     
@@ -242,11 +248,30 @@ const App: React.FC = () => {
       window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimeout);
     };
-  }, []);
+  }, [imagesLoaded]);
+
+  const isSceneReady = imagesLoaded && stickers.length > 0;
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      {stickers.map((sticker, index) => (
+      {!isSceneReady && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.25rem',
+            color: '#73675e',
+            letterSpacing: '0.04em',
+          }}
+        >
+          Loading stickers...
+        </div>
+      )}
+
+      {isSceneReady && stickers.map((sticker, index) => (
         <Sticker
           key={sticker.id}
           id={sticker.id}
