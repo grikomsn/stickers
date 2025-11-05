@@ -242,7 +242,6 @@ const App: React.FC = () => {
         );
       }, 150);
     };
-
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -250,28 +249,9 @@ const App: React.FC = () => {
     };
   }, [imagesLoaded]);
 
-  const isSceneReady = imagesLoaded && stickers.length > 0;
-
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      {!isSceneReady && (
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.25rem',
-            color: '#73675e',
-            letterSpacing: '0.04em',
-          }}
-        >
-          Loading stickers...
-        </div>
-      )}
-
-      {isSceneReady && stickers.map((sticker, index) => (
+      {stickers.map((sticker, index) => (
         <Sticker
           key={sticker.id}
           id={sticker.id}
