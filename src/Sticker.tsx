@@ -27,6 +27,7 @@ const Sticker: React.FC<StickerProps> = ({
   onPositionChange,
 }) => {
   const [rotation, setRotation] = useState(initialRotation);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const x = useMotionValue(initialX);
   const y = useMotionValue(initialY);
 
@@ -79,6 +80,22 @@ const Sticker: React.FC<StickerProps> = ({
     pointerEvents: 'none' as const,
     filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))',
   }), []);
+
+  const handleImageLoad = useCallback(() => {
+    setIsImageLoaded(true);
+  }, []);
+
+  // Don't render until image is loaded to prevent staggering
+  if (!isImageLoaded) {
+    return (
+      <img
+        src={src}
+        alt="sticker"
+        onLoad={handleImageLoad}
+        style={{ display: 'none' }}
+      />
+    );
+  }
 
   return (
     <motion.div
