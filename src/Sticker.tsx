@@ -71,6 +71,11 @@ const Sticker: React.FC<StickerProps> = ({
     height: size,
     cursor: 'grab',
     userSelect: 'none' as const,
+    background: 'transparent',
+    border: 'none',
+    outline: 'none',
+    WebkitTapHighlightColor: 'transparent',
+    touchAction: 'none' as const,
   }), [size]);
 
   const imageWrapperStyle = useMemo(() => ({
@@ -78,6 +83,7 @@ const Sticker: React.FC<StickerProps> = ({
     width: '100%',
     height: '100%',
     overflow: 'visible' as const,
+    background: 'transparent',
   }), []);
 
   const imageStyle = useMemo(() => ({
@@ -138,6 +144,9 @@ const Sticker: React.FC<StickerProps> = ({
         scale: 0.95,
         cursor: 'grabbing',
         transition: { duration: 0.1 }
+      }}
+      whileDrag={{
+        cursor: 'grabbing',
       }}
     >
       <div style={imageWrapperStyle}>
