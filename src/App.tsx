@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { PaperTexture } from '@paper-design/shaders-react';
 import Sticker from './Sticker';
 
 interface StickerData {
@@ -269,6 +270,30 @@ const App: React.FC = () => {
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+      <PaperTexture
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0,
+        }}
+        fit="cover"
+        colorFront="#9fadbc"
+        colorBack="#ffffff"
+        contrast={0.3}
+        roughness={0.4}
+        fiber={0.3}
+        fiberSize={0.2}
+        crumples={0.3}
+        crumpleSize={0.35}
+        folds={0.65}
+        foldCount={5}
+        fade={0}
+        drops={0.2}
+        speed={0}
+      />
       {stickers.map((sticker, index) => (
         <Sticker
           key={sticker.id}
