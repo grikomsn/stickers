@@ -154,6 +154,7 @@ const getRandomPosition = (
 const App: React.FC = () => {
   const [stickers, setStickers] = useState<StickerData[]>([]);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [selectedStickerId, setSelectedStickerId] = useState<string | null>(null);
   const [dimensions, setDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -187,6 +188,22 @@ const App: React.FC = () => {
       return sticker;
     }));
   }, [dimensions, stickerSize]);
+
+  /**
+   * Handles when a sticker starts being dragged/selected
+   * Sets the selected sticker ID to bring it to the front
+   */
+  const handleStickerDragStart = useCallback((id: string) => {
+    setSelectedStickerId(id);
+  }, []);
+
+  /**
+   * Handles when a sticker drag ends
+   * Keeps the sticker selected (z-index high) after moving
+   */
+  const handleStickerDragEnd = useCallback((id: string) => {
+    // Keep selectedStickerId set so sticker stays on top
+  }, []);
 
   useEffect(() => {
     // Preload all images before rendering stickers
@@ -331,7 +348,10 @@ const App: React.FC = () => {
           maxHeight={dimensions.height}
           index={index}
           initialRotation={sticker.rotation}
+          isSelected={selectedStickerId === sticker.id}
           onPositionChange={handleStickerPositionChange}
+          onDragStart={handleStickerDragStart}
+          onDragEnd={handleStickerDragEnd}
         />
       ))}
     </div>

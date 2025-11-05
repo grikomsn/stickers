@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<meta name="description" content="Arrange draggable tech stickers in an interactive workspace right in your browser.">
 		<meta name="theme-color" content="#f5f0eb">
 		<link rel="icon" type="image/x-icon" href="./public/favicon.ico">
@@ -23,6 +23,12 @@
 				margin: 0;
 				padding: 0;
 				box-sizing: border-box;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				-webkit-touch-callout: none;
+				-webkit-tap-highlight-color: transparent;
 			}
 			
 			body {
@@ -31,6 +37,8 @@
 				overflow: hidden;
 				background: linear-gradient(135deg, #faf8f5 0%, #f5f0eb 100%);
 				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+				touch-action: manipulation;
+				-ms-touch-action: manipulation;
 			}
 			
 			#root {

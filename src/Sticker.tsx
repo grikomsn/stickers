@@ -12,7 +12,10 @@ interface StickerProps {
   maxHeight: number;
   index: number;
   initialRotation: number;
+  isSelected: boolean;
   onPositionChange: (id: string, x: number, y: number) => void;
+  onDragStart: (id: string) => void;
+  onDragEnd: (id: string) => void;
 }
 
 const Sticker: React.FC<StickerProps> = ({
@@ -25,7 +28,10 @@ const Sticker: React.FC<StickerProps> = ({
   maxHeight,
   index,
   initialRotation,
+  isSelected,
   onPositionChange,
+  onDragStart,
+  onDragEnd,
 }) => {
   const [rotation, setRotation] = useState(initialRotation);
   const x = useMotionValue(initialX);
@@ -44,6 +50,10 @@ const Sticker: React.FC<StickerProps> = ({
     bottom: maxHeight - size,
   }), [maxWidth, maxHeight, size]);
 
+  const handleDragStart = useCallback(() => {
+    onDragStart(id);
+  }, [onDragStart, id]);
+
   const handleDragEnd = useCallback(() => {
     const rotationChange = Math.random() * 10 - 5;
     setRotation(prev => prev + rotationChange);
@@ -52,7 +62,8 @@ const Sticker: React.FC<StickerProps> = ({
     const currentX = x.get();
     const currentY = y.get();
     onPositionChange(id, currentX, currentY);
-  }, [onPositionChange, id, x, y]);
+    onDragEnd(id);
+  }, [onPositionChange, onDragEnd, id, x, y]);
 
   const transitionConfig = useMemo(() => ({
     duration: 0.5,
@@ -76,7 +87,8 @@ const Sticker: React.FC<StickerProps> = ({
     outline: 'none',
     WebkitTapHighlightColor: 'transparent',
     touchAction: 'none' as const,
-  }), [size]);
+    zIndex: isSelected ? 1000 : index + 1,
+  }), [size, isSelected, index]);
 
   const imageWrapperStyle = useMemo(() => ({
     position: 'relative' as const,
@@ -134,6 +146,7 @@ const Sticker: React.FC<StickerProps> = ({
         rotate: rotation
       }}
       transition={transitionConfig}
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       whileHover={{
         scale: 1.1,
