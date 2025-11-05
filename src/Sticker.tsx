@@ -100,7 +100,15 @@ const Sticker: React.FC<StickerProps> = ({
     pointerEvents: 'none' as const,
     mixBlendMode: 'overlay' as const,
     opacity: 0.6,
-  }), []);
+    maskImage: `url(${src})`,
+    maskSize: 'contain',
+    maskRepeat: 'no-repeat',
+    maskPosition: 'center',
+    WebkitMaskImage: `url(${src})`,
+    WebkitMaskSize: 'contain',
+    WebkitMaskRepeat: 'no-repeat',
+    WebkitMaskPosition: 'center',
+  }), [src]);
 
   return (
     <motion.div
