@@ -33,8 +33,8 @@ curl -fsSL https://bun.sh/install | bash
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/interactive-stickers.git
-cd interactive-stickers
+git clone https://github.com/grikomsn/stickers.git
+cd stickers
 
 # Install dependencies
 bun install
@@ -95,7 +95,7 @@ When you resize the browser window:
 ## Project Structure
 
 ```
-interactive-stickers/
+stickers/
 ├── bun.lock           # Bun lockfile
 ├── public/              # Static assets
 │   └── sticker-*.png   # 17 sticker images
