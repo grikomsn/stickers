@@ -95,7 +95,7 @@ const Sticker: React.FC<StickerProps> = ({
     return (
       <img
         src={src}
-        alt="sticker"
+        alt=""
         onLoad={handleImageLoad}
         onError={handleImageError}
         style={{ display: 'none' }}
