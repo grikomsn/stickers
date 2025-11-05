@@ -1,0 +1,44 @@
+{
+  "name": "@grikomsn/stickers",
+  "version": "1.0.0",
+  "description": "A beautiful interactive sticker board with drag & drop, animations, and responsive positioning built with React, Bun, and Framer Motion",
+  "module": "src/main.tsx",
+  "type": "module",
+  "keywords": [
+    "react",
+    "framer-motion",
+    "bun",
+    "stickers",
+    "drag-and-drop",
+    "interactive",
+    "animations",
+    "typescript"
+  ],
+  "author": "Griko Nibras",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grikomsn/stickers"
+  },
+  "homepage": "https://github.com/grikomsn/stickers#readme",
+  "bugs": {
+    "url": "https://github.com/grikomsn/stickers/issues"
+  },
+  "scripts": {
+    "dev": "bun index.html --console",
+    "build": "bun build index.html --outdir=./dist --minify"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "framer-motion": "^12.23.24",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}
