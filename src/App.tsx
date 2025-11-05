@@ -11,8 +11,18 @@ interface StickerData {
   relativeY: number;
 }
 
-const STICKER_SIZE = 180;
-const MIN_DISTANCE = 200;
+// Responsive sticker size based on viewport width
+const getStickerSize = (width: number): number => {
+  // Mobile: 100px, Tablet: 140px, Desktop: 180px
+  if (width < 768) return 100; // Mobile
+  if (width < 1024) return 140; // Tablet
+  return 180; // Desktop
+};
+
+// Minimum distance scales with sticker size
+const getMinDistance = (stickerSize: number): number => {
+  return stickerSize * 1.1; // ~10% buffer around sticker
+};
 
 // Import sticker images so Bun's bundler can process them
 import stickerAirpodsWhite from '../public/sticker-airpods-white.png';
@@ -88,6 +98,8 @@ const isOverlapping = (
  * @param maxWidth Maximum width of the viewport
  * @param maxHeight Maximum height of the viewport
  * @param existingPositions Array of already placed sticker positions
+ * @param stickerSize Current sticker size
+ * @param minDistance Minimum distance between stickers
  * @param maxAttempts Maximum number of placement attempts before giving up
  * @returns Valid position {x, y} or null if no valid position found
  */
@@ -95,16 +107,18 @@ const getRandomPosition = (
   maxWidth: number,
   maxHeight: number,
   existingPositions: { x: number; y: number }[],
+  stickerSize: number,
+  minDistance: number,
   maxAttempts = 100
 ): { x: number; y: number } | null => {
-  const halfSize = STICKER_SIZE / 2;
-  const minDistSquared = MIN_DISTANCE * MIN_DISTANCE;
+  const halfSize = stickerSize / 2;
+  const minDistSquared = minDistance * minDistance;
   
   // Try up to maxAttempts times to find a non-overlapping position
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     // Generate random position within bounds
-    const x = Math.random() * (maxWidth - STICKER_SIZE);
-    const y = Math.random() * (maxHeight - STICKER_SIZE);
+    const x = Math.random() * (maxWidth - stickerSize);
+    const y = Math.random() * (maxHeight - stickerSize);
     const centerX = x + halfSize;
     const centerY = y + halfSize;
 
@@ -142,6 +156,10 @@ const App: React.FC = () => {
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  
+  // Calculate responsive sticker size and min distance
+  const stickerSize = getStickerSize(dimensions.width);
+  const minDistance = getMinDistance(stickerSize);
 
   /**
    * Updates sticker position and recalculates relative ratios
@@ -151,8 +169,8 @@ const App: React.FC = () => {
   const handleStickerPositionChange = useCallback((id: string, x: number, y: number) => {
     setStickers(prev => prev.map(sticker => {
       if (sticker.id === id) {
-        const availableWidth = dimensions.width - STICKER_SIZE;
-        const availableHeight = dimensions.height - STICKER_SIZE;
+        const availableWidth = dimensions.width - stickerSize;
+        const availableHeight = dimensions.height - stickerSize;
         
         return {
           ...sticker,
@@ -166,7 +184,7 @@ const App: React.FC = () => {
       }
       return sticker;
     }));
-  }, [dimensions]);
+  }, [dimensions, stickerSize]);
 
   useEffect(() => {
     const initialStickers: StickerData[] = [];
@@ -174,14 +192,18 @@ const App: React.FC = () => {
     
     const initialWidth = window.innerWidth;
     const initialHeight = window.innerHeight;
-    const availableWidth = initialWidth - STICKER_SIZE;
-    const availableHeight = initialHeight - STICKER_SIZE;
+    const initialStickerSize = getStickerSize(initialWidth);
+    const initialMinDistance = getMinDistance(initialStickerSize);
+    const availableWidth = initialWidth - initialStickerSize;
+    const availableHeight = initialHeight - initialStickerSize;
 
     for (let i = 0; i < stickerFiles.length; i++) {
       const position = getRandomPosition(
         initialWidth,
         initialHeight,
-        positions
+        positions,
+        initialStickerSize,
+        initialMinDistance
       );
 
       if (position) {
@@ -214,10 +236,11 @@ const App: React.FC = () => {
         });
 
         // Scale sticker positions proportionally
-        setStickers(prevStickers => 
-          prevStickers.map(sticker => {
-            const availableWidth = newWidth - STICKER_SIZE;
-            const availableHeight = newHeight - STICKER_SIZE;
+        setStickers(prevStickers => {
+          const newStickerSize = getStickerSize(newWidth);
+          return prevStickers.map(sticker => {
+            const availableWidth = newWidth - newStickerSize;
+            const availableHeight = newHeight - newStickerSize;
             
             // Calculate new position using relative ratios
             const newX = sticker.relativeX * availableWidth;
@@ -232,8 +255,8 @@ const App: React.FC = () => {
               x: clampedX,
               y: clampedY,
             };
-          })
-        );
+          });
+        });
       }, 150);
     };
 
@@ -253,7 +276,7 @@ const App: React.FC = () => {
           src={sticker.src}
           initialX={sticker.x}
           initialY={sticker.y}
-          size={STICKER_SIZE}
+          size={stickerSize}
           maxWidth={dimensions.width}
           maxHeight={dimensions.height}
           index={index}
