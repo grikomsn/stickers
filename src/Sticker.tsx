@@ -85,6 +85,11 @@ const Sticker: React.FC<StickerProps> = ({
     setIsImageLoaded(true);
   }, []);
 
+  const handleImageError = useCallback(() => {
+    // If image fails to load, still render the component to prevent infinite loading
+    setIsImageLoaded(true);
+  }, []);
+
   // Don't render until image is loaded to prevent staggering
   if (!isImageLoaded) {
     return (
@@ -92,6 +97,7 @@ const Sticker: React.FC<StickerProps> = ({
         src={src}
         alt="sticker"
         onLoad={handleImageLoad}
+        onError={handleImageError}
         style={{ display: 'none' }}
       />
     );
