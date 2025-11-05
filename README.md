@@ -33,8 +33,8 @@ curl -fsSL https://bun.sh/install | bash
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/interactive-stickers.git
-cd interactive-stickers
+git clone https://github.com/grikomsn/stickers.git
+cd stickers
 
 # Install dependencies
 bun install
@@ -44,10 +44,10 @@ bun install
 
 ```bash
 # Start the dev server with hot reload
-bun run dev
+bun index.html --console
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+This uses Bun's built-in HTML bundler. You can also run `bun run dev`, which calls the same command through the package script. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Build
 
@@ -95,15 +95,15 @@ When you resize the browser window:
 ## Project Structure
 
 ```
-interactive-stickers/
+stickers/
+├── bun.lock           # Bun lockfile
 ├── public/              # Static assets
 │   └── sticker-*.png   # 17 sticker images
 ├── src/
 │   ├── App.tsx         # Main app with state & collision detection
 │   ├── Sticker.tsx     # Individual sticker component with animations
 │   └── main.tsx        # React entry point
-├── index.html          # HTML template
-├── server.ts           # Bun development server
+├── index.html          # HTML template & bundler entry point
 ├── package.json        # Dependencies & scripts
 └── tsconfig.json       # TypeScript configuration
 ```
@@ -113,13 +113,18 @@ interactive-stickers/
 ### Add Your Own Stickers
 
 1. Place PNG images in the `public/` directory
-2. Update the `stickerFiles` array in `src/App.tsx`:
+2. Import the new files alongside the existing sticker imports in `src/App.tsx`:
+
+```typescript
+import mySticker from "../public/my-sticker.png";
+```
+
+3. Add the imported sticker to the `stickerFiles` array:
 
 ```typescript
 const stickerFiles = [
-  "your-sticker-1.png",
-  "your-sticker-2.png",
-  // ... add more
+  // ... existing stickers
+  mySticker,
 ];
 ```
 
