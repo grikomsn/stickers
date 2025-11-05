@@ -153,6 +153,7 @@ const getRandomPosition = (
 
 const App: React.FC = () => {
   const [stickers, setStickers] = useState<StickerData[]>([]);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   const [dimensions, setDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -188,41 +189,65 @@ const App: React.FC = () => {
   }, [dimensions, stickerSize]);
 
   useEffect(() => {
-    const initialStickers: StickerData[] = [];
-    const positions: { x: number; y: number }[] = [];
-    
-    const initialWidth = window.innerWidth;
-    const initialHeight = window.innerHeight;
-    const initialStickerSize = getStickerSize(initialWidth);
-    const initialMinDistance = getMinDistance(initialStickerSize);
-    const availableWidth = initialWidth - initialStickerSize;
-    const availableHeight = initialHeight - initialStickerSize;
-
-    for (let i = 0; i < stickerFiles.length; i++) {
-      const position = getRandomPosition(
-        initialWidth,
-        initialHeight,
-        positions,
-        initialStickerSize,
-        initialMinDistance
-      );
-
-      if (position) {
-        positions.push(position);
-        const rotation = Math.random() * 30 - 15;
-        initialStickers.push({
-          id: `sticker-${i}`,
-          src: stickerFiles[i],
-          x: position.x,
-          y: position.y,
-          rotation,
-          relativeX: position.x / availableWidth,
-          relativeY: position.y / availableHeight,
+    // Preload all images before rendering stickers
+    const preloadImages = (): Promise<void> => {
+      return new Promise((resolve) => {
+        const imagePromises = stickerFiles.map((src) => {
+          return new Promise<void>((imgResolve) => {
+            const img = new Image();
+            img.onload = () => imgResolve();
+            img.onerror = () => imgResolve(); // Resolve even on error to not block rendering
+            img.src = src;
+          });
         });
-      }
-    }
+        
+        Promise.all(imagePromises).then(() => resolve());
+      });
+    };
 
-    setStickers(initialStickers);
+    const initializeStickers = async () => {
+      // Wait for all images to load
+      await preloadImages();
+      
+      const initialStickers: StickerData[] = [];
+      const positions: { x: number; y: number }[] = [];
+      
+      const initialWidth = window.innerWidth;
+      const initialHeight = window.innerHeight;
+      const initialStickerSize = getStickerSize(initialWidth);
+      const initialMinDistance = getMinDistance(initialStickerSize);
+      const availableWidth = initialWidth - initialStickerSize;
+      const availableHeight = initialHeight - initialStickerSize;
+
+      for (let i = 0; i < stickerFiles.length; i++) {
+        const position = getRandomPosition(
+          initialWidth,
+          initialHeight,
+          positions,
+          initialStickerSize,
+          initialMinDistance
+        );
+
+        if (position) {
+          positions.push(position);
+          const rotation = Math.random() * 30 - 15;
+          initialStickers.push({
+            id: `sticker-${i}`,
+            src: stickerFiles[i],
+            x: position.x,
+            y: position.y,
+            rotation,
+            relativeX: position.x / availableWidth,
+            relativeY: position.y / availableHeight,
+          });
+        }
+      }
+
+      setStickers(initialStickers);
+      setImagesLoaded(true);
+    };
+
+    initializeStickers();
 
     let resizeTimeout: number;
     const handleResize = () => {
@@ -294,7 +319,7 @@ const App: React.FC = () => {
         drops={0.2}
         speed={0}
       />
-      {stickers.map((sticker, index) => (
+      {imagesLoaded && stickers.map((sticker, index) => (
         <Sticker
           key={sticker.id}
           id={sticker.id}
