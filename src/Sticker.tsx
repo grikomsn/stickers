@@ -78,7 +78,6 @@ const Sticker: React.FC<StickerProps> = ({
     width: '100%',
     height: '100%',
     overflow: 'visible' as const,
-    filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))',
   }), []);
 
   const imageStyle = useMemo(() => ({
