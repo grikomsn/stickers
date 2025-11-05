@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, useMotionValue } from 'framer-motion';
+import { PaperTexture } from '@paper-design/shaders-react';
 
 interface StickerProps {
   id: string;
@@ -72,12 +73,33 @@ const Sticker: React.FC<StickerProps> = ({
     userSelect: 'none' as const,
   }), [size]);
 
+  const imageWrapperStyle = useMemo(() => ({
+    position: 'relative' as const,
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden' as const,
+  }), []);
+
   const imageStyle = useMemo(() => ({
     width: '100%',
     height: '100%',
     objectFit: 'contain' as const,
     pointerEvents: 'none' as const,
     filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))',
+    position: 'relative' as const,
+    zIndex: 1,
+  }), []);
+
+  const textureOverlayStyle = useMemo(() => ({
+    position: 'absolute' as const,
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: 2,
+    pointerEvents: 'none' as const,
+    mixBlendMode: 'overlay' as const,
+    opacity: 0.6,
   }), []);
 
   return (
@@ -111,12 +133,31 @@ const Sticker: React.FC<StickerProps> = ({
         transition: { duration: 0.1 }
       }}
     >
-      <img
-        src={src}
-        alt="sticker"
-        style={imageStyle}
-        draggable={false}
-      />
+      <div style={imageWrapperStyle}>
+        <img
+          src={src}
+          alt="sticker"
+          style={imageStyle}
+          draggable={false}
+        />
+        <PaperTexture
+          style={textureOverlayStyle}
+          fit="cover"
+          colorFront="#9fadbc"
+          colorBack="#ffffff"
+          contrast={0.25}
+          roughness={0.3}
+          fiber={0.25}
+          fiberSize={0.15}
+          crumples={0.2}
+          crumpleSize={0.3}
+          folds={0.5}
+          foldCount={4}
+          fade={0}
+          drops={0.15}
+          speed={0}
+        />
+      </div>
     </motion.div>
   );
 };
