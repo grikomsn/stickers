@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { motion, useMotionValue } from 'framer-motion';
+import { animate, motion, useMotionValue } from 'framer-motion';
 import { PaperTexture } from '@paper-design/shaders-react';
 
 interface StickerProps {
@@ -33,8 +33,19 @@ const Sticker: React.FC<StickerProps> = ({
 
   // Update position smoothly when initialX or initialY changes (on resize)
   useEffect(() => {
-    x.set(initialX, { duration: 0.3, ease: "easeInOut" });
-    y.set(initialY, { duration: 0.3, ease: "easeInOut" });
+    const xAnimation = animate(x, initialX, {
+      duration: 0.3,
+      ease: 'easeInOut',
+    });
+    const yAnimation = animate(y, initialY, {
+      duration: 0.3,
+      ease: 'easeInOut',
+    });
+
+    return () => {
+      xAnimation.stop();
+      yAnimation.stop();
+    };
   }, [initialX, initialY, x, y]);
 
   const dragConstraints = useMemo(() => ({
@@ -47,7 +58,7 @@ const Sticker: React.FC<StickerProps> = ({
   const handleDragEnd = useCallback(() => {
     const rotationChange = Math.random() * 10 - 5;
     setRotation(prev => prev + rotationChange);
-    
+
     // Report new position back to parent to update relative ratios
     const currentX = x.get();
     const currentY = y.get();
@@ -57,12 +68,12 @@ const Sticker: React.FC<StickerProps> = ({
   const transitionConfig = useMemo(() => ({
     duration: 0.5,
     delay: index * 0.05,
-    ease: "backOut"
+    ease: 'easeOut' as const,
   }), [index]);
 
   const hoverTransition = useMemo(() => ({
     duration: 0.15,
-    ease: "easeOut"
+    ease: 'easeOut' as const,
   }), []);
 
   const containerStyle = useMemo(() => ({
@@ -123,13 +134,13 @@ const Sticker: React.FC<StickerProps> = ({
       dragMomentum={false}
       layout={false}
       style={{ x, y, ...containerStyle }}
-      initial={{ 
-        scale: 0, 
+      initial={{
+        scale: 0,
         opacity: 0,
         rotate: initialRotation
       }}
-      animate={{ 
-        scale: 1, 
+      animate={{
+        scale: 1,
         opacity: 1,
         rotate: rotation
       }}

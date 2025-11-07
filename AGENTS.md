@@ -1,33 +1,44 @@
-# Agent Guidelines for Interactive Stickers
+# Agent Guidelines for Stickers Project
 
-## Build & Test Commands
-
-- Dev: `bun index.html --console` (starts dev server on :3000 with HMR and console streaming)
-- Build: `bun build index.html --outdir=./dist --minify` (production build with minification)
-- Test: `bun test` (run all tests) or `bun test <file.test.ts>` (single test)
-- Install: `bun install` (never use npm/yarn/pnpm)
-
-## Technology Stack
-
-- **Runtime**: Bun v1.3.1+ (NOT Node.js - use `bun <file>` not `node`)
-- **Framework**: React 19 with TypeScript 5
-- **Animation**: Framer Motion 12
-- **Bundling**: Bun's native HTML bundler (NOT vite/webpack - just `bun index.html`)
+## Build/Lint/Test Commands
+- **Dev server**: `bun run dev` (starts Vite at localhost:5173)
+- **Build**: `bun run build` (TypeScript compilation + Vite build)
+- **Lint**: `bun run lint` (ESLint check)
+- **Preview**: `bun run preview` (preview production build)
+- **No tests configured** - project doesn't have a test suite yet
 
 ## Code Style
 
-**Imports**: React first, then 3rd party, then local. Use named imports.
-**Types**: Strict TypeScript with interfaces for props. Define types inline or in same file.
-**Components**: Functional components with React.FC. Props interface above component.
-**Naming**: PascalCase for components/types, camelCase for variables/functions, UPPER_SNAKE_CASE for constants.
-**Functions**: Document complex logic with JSDoc (see isOverlapping, getRandomPosition in App.tsx).
-**State**: useState for local, useCallback for handlers, useMemo for expensive calculations.
-**Performance**: Use squared distance for comparisons, debounce event handlers, memoize where needed.
-**Error Handling**: Return null for failed operations (see getRandomPosition). Use optional chaining.
+### Package Manager & Runtime
+- **Always use Bun**, never Node.js, npm, pnpm, or yarn
+- Use `bun run <script>` not `npm run <script>`
+- Use `bun install` not `npm install`
 
-## Project Structure
+### Imports & Formatting
+- Use double quotes for strings (see existing code)
+- Group imports: React/libraries first, then local modules, then assets
+- Import assets as ES modules: `import image from "./assets/image.png"`
 
-- `index.html` - HTML entry point (references ./src/main.tsx)
-- `src/*.tsx` - React components (App.tsx = main logic, Sticker.tsx = individual component)
-- `public/` - Static assets (images auto-copied to dist/ on build)
-- `dist/` - Production build output (gitignored)
+### TypeScript
+- Strict type checking enabled (React 19, TypeScript 5)
+- Define interfaces for props and data structures
+- Use React.FC for components with explicit prop types
+- Use `useMemo`, `useCallback` for performance optimization
+
+### Naming Conventions
+- PascalCase for components and interfaces: `StickerData`, `App`
+- camelCase for functions, variables, handlers: `handleDragEnd`, `stickerSize`
+- UPPER_CASE for true constants: `MIN_DISTANCE`, `STICKER_SIZE`
+- Descriptive names with context: `getRandomPosition`, `handleStickerPositionChange`
+
+### Component Style
+- Functional components with hooks (React 19)
+- Memoize expensive calculations and callbacks
+- Use Framer Motion for animations
+- Inline styles via useMemo for performance
+- Document complex functions with JSDoc comments
+
+### Error Handling
+- Handle edge cases gracefully (e.g., image load errors, failed collision detection)
+- Use null returns for failures, check before use
+- Provide fallbacks (e.g., resolve on image error to not block rendering)

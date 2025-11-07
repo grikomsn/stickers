@@ -14,7 +14,8 @@ A beautiful, interactive sticker board built with React, Bun, and Framer Motion.
 
 ## Tech Stack
 
-- [Bun](https://bun.sh) v1.3.1+ - Fast JavaScript runtime & bundler
+- [Bun](https://bun.sh) v1.3.1+ - Fast JavaScript runtime & package manager
+- [Vite 7](https://vite.dev) - Lightning fast dev server & build pipeline
 - [React 19](https://react.dev) - UI framework
 - [Framer Motion 12](https://www.framer.com/motion/) - Animation library
 - [TypeScript 5](https://www.typescriptlang.org/) - Type safety
@@ -43,17 +44,20 @@ bun install
 ### Development
 
 ```bash
-# Start the dev server with hot reload
-bun index.html --console
+# Start the Vite dev server with hot reload
+bun run dev
 ```
 
-This uses Bun's built-in HTML bundler. You can also run `bun run dev`, which calls the same command through the package script. Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:5173](http://localhost:5173) in your browser. Vite automatically reloads changes and leverages the new React Compiler for optimized rendering.
 
 ### Build
 
 ```bash
 # Build for production
 bun run build
+
+# (Optional) Preview the production build locally
+bun run preview
 ```
 
 Output will be in the `dist/` directory.
@@ -96,27 +100,29 @@ When you resize the browser window:
 
 ```
 stickers/
-├── bun.lock           # Bun lockfile
-├── public/              # Static assets
-│   └── sticker-*.png   # 17 sticker images
+├── bun.lock             # Bun lockfile
+├── public/              # Static assets served as-is (favicon, OG image)
 ├── src/
-│   ├── App.tsx         # Main app with state & collision detection
-│   ├── Sticker.tsx     # Individual sticker component with animations
-│   └── main.tsx        # React entry point
-├── index.html          # HTML template & bundler entry point
-├── package.json        # Dependencies & scripts
-└── tsconfig.json       # TypeScript configuration
+│   ├── assets/          # Sticker images bundled by Vite
+│   ├── App.tsx          # Main app with state & collision detection
+│   ├── Sticker.tsx      # Individual sticker component with animations
+│   ├── main.tsx         # React entry point
+│   └── vite-env.d.ts    # Vite type definitions
+├── index.html           # Vite HTML entry point
+├── package.json         # Dependencies & scripts
+├── tsconfig.json        # TypeScript configuration
+└── vite.config.ts       # Vite configuration (React Compiler enabled)
 ```
 
 ## Customization
 
 ### Add Your Own Stickers
 
-1. Place PNG images in the `public/` directory
+1. Place PNG images in the `src/assets/` directory
 2. Import the new files alongside the existing sticker imports in `src/App.tsx`:
 
 ```typescript
-import mySticker from "../public/my-sticker.png";
+import mySticker from "./assets/my-sticker.png";
 ```
 
 3. Add the imported sticker to the `stickerFiles` array:
