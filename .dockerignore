@@ -1,0 +1,48 @@
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+.vite
+
+# Development files
+.git
+.gitignore
+.gitattributes
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+!README.md
+
+# GitHub
+.github
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage
+.nyc_output
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+tmp
+temp
+*.tmp
