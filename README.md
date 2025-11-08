@@ -90,6 +90,8 @@ docker compose down
 
 The application will be available at [http://localhost:3000](http://localhost:3000).
 
+For detailed Docker deployment instructions, see [DOCKER.md](DOCKER.md).
+
 #### Pull from GitHub Container Registry
 
 Pre-built images are automatically published to GitHub Container Registry:
