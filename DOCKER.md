@@ -52,8 +52,8 @@ The Dockerfile uses a multi-stage build pattern for optimization:
 ### Runner Stage
 - Base: `oven/bun:1.2.12-slim` (smaller image)
 - Copies only the built `dist` folder
-- Includes a lightweight HTTP server using Bun's built-in capabilities
-- Serves static files with proper fallback for client-side routing
+- Uses Vercel's `serve` package for serving static files
+- Serves static files with proper SPA fallback for client-side routing
 
 ## Configuration
 
@@ -103,8 +103,8 @@ Images are automatically tagged as:
 To modify the server or build process:
 
 1. Edit the `Dockerfile` for build configuration
-2. The static file server is embedded in the Dockerfile
-3. To use a different server, modify the `CMD` instruction
+2. The application uses Vercel's `serve` package for serving static files
+3. To use a different server, modify the `RUN` and `CMD` instructions in the runner stage
 
 ## Troubleshooting
 
