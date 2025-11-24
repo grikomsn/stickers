@@ -62,6 +62,48 @@ bun run preview
 
 Output will be in the `dist/` directory.
 
+### Docker Deployment
+
+Run the application using Docker with multi-stage builds for optimized image size.
+
+#### Using Docker
+
+```bash
+# Build the Docker image
+docker build -t stickers .
+
+# Run the container
+docker run -d -p 3000:3000 --name stickers stickers
+
+# Access the application at http://localhost:3000
+```
+
+#### Using Docker Compose
+
+```bash
+# Start the application
+docker compose up -d
+
+# Stop the application
+docker compose down
+```
+
+The application will be available at [http://localhost:3000](http://localhost:3000).
+
+For detailed Docker deployment instructions, see [DOCKER.md](DOCKER.md).
+
+#### Pull from GitHub Container Registry
+
+Pre-built images are automatically published to GitHub Container Registry:
+
+```bash
+# Pull the latest image
+docker pull ghcr.io/grikomsn/stickers:latest
+
+# Run it
+docker run -d -p 3000:3000 ghcr.io/grikomsn/stickers:latest
+```
+
 ## How It Works
 
 ### Initial Placement
