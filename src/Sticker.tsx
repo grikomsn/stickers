@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { animate, motion, useMotionValue } from 'framer-motion';
-import { PaperTexture } from '@paper-design/shaders-react';
 
 interface StickerProps {
   id: string;
@@ -106,26 +105,6 @@ const Sticker: React.FC<StickerProps> = ({
     zIndex: 1,
   }), []);
 
-  const textureOverlayStyle = useMemo(() => ({
-    position: 'absolute' as const,
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: 2,
-    pointerEvents: 'none' as const,
-    mixBlendMode: 'overlay' as const,
-    opacity: 0.6,
-    maskImage: `url(${src})`,
-    maskSize: 'contain',
-    maskRepeat: 'no-repeat',
-    maskPosition: 'center',
-    WebkitMaskImage: `url(${src})`,
-    WebkitMaskSize: 'contain',
-    WebkitMaskRepeat: 'no-repeat',
-    WebkitMaskPosition: 'center',
-  }), [src]);
-
   return (
     <motion.div
       drag
@@ -166,23 +145,6 @@ const Sticker: React.FC<StickerProps> = ({
           alt="sticker"
           style={imageStyle}
           draggable={false}
-        />
-        <PaperTexture
-          style={textureOverlayStyle}
-          fit="cover"
-          colorFront="#9fadbc"
-          colorBack="#ffffff"
-          contrast={0.25}
-          roughness={0.3}
-          fiber={0.25}
-          fiberSize={0.15}
-          crumples={0.2}
-          crumpleSize={0.3}
-          folds={0.5}
-          foldCount={4}
-          fade={0}
-          drops={0.15}
-          speed={0}
         />
       </div>
     </motion.div>
